@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1174</width>
+    <height>860</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_title_area"/>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>50</y>
+      <width>981</width>
+      <height>781</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_activity_area">
+     <item>
+      <widget class="QScrollArea" name="scrollArea_main">
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>977</width>
+          <height>777</height>
+         </rect>
+        </property>
+        <widget class="QStackedWidget" name="stack_list">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>971</width>
+           <height>781</height>
+          </rect>
+         </property>
+         <property name="currentIndex">
+          <number>3</number>
+         </property>
+         <widget class="QWidget" name="page_home">
+          <property name="accessibleName">
+           <string>欢迎界面</string>
+          </property>
+          <widget class="QLabel" name="label_2">
+           <property name="geometry">
+            <rect>
+             <x>240</x>
+             <y>120</y>
+             <width>231</width>
+             <height>101</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>欢迎页面</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_dict">
+          <property name="accessibleName">
+           <string>本地词典</string>
+          </property>
+          <widget class="QLabel" name="label_3">
+           <property name="geometry">
+            <rect>
+             <x>283</x>
+             <y>1</y>
+             <width>131</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>隶书</family>
+             <pointsize>18</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>本地词典</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_query">
+          <property name="accessibleName">
+           <string>单词查询</string>
+          </property>
+          <widget class="QLabel" name="label">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>0</y>
+             <width>111</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>隶书</family>
+             <pointsize>16</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>单词查询</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QPlainTextEdit" name="plainTextEdit">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>50</y>
+             <width>491</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_translate">
+           <property name="geometry">
+            <rect>
+             <x>620</x>
+             <y>50</y>
+             <width>101</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>翻译</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_pwd_mgr">
+          <property name="accessibleName">
+           <string>本地密码</string>
+          </property>
+          <widget class="QLabel" name="label_4">
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>10</y>
+             <width>81</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>隶书</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>密码管理</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>40</y>
+             <width>971</width>
+             <height>101</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <widget class="QLabel" name="label_9">
+            <property name="geometry">
+             <rect>
+              <x>560</x>
+              <y>10</y>
+              <width>31</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>分组：</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_remarks">
+            <property name="geometry">
+             <rect>
+              <x>440</x>
+              <y>60</y>
+              <width>281</width>
+              <height>30</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_6">
+            <property name="geometry">
+             <rect>
+              <x>280</x>
+              <y>10</y>
+              <width>41</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>用户名：</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_usr">
+            <property name="geometry">
+             <rect>
+              <x>330</x>
+              <y>10</y>
+              <width>161</width>
+              <height>30</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_url">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>60</y>
+              <width>291</width>
+              <height>30</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_7">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>60</y>
+              <width>31</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>网址：</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_8">
+            <property name="geometry">
+             <rect>
+              <x>400</x>
+              <y>60</y>
+              <width>31</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>备注：</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_title">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>10</y>
+              <width>171</width>
+              <height>30</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_5">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>10</y>
+              <width>31</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>标题：</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="comboBox_category">
+            <property name="geometry">
+             <rect>
+              <x>600</x>
+              <y>10</y>
+              <width>181</width>
+              <height>30</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QToolButton" name="toolButton_pwd_query">
+            <property name="geometry">
+             <rect>
+              <x>850</x>
+              <y>20</y>
+              <width>91</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>查询</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QTableView" name="tableView_pwd">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>220</y>
+             <width>971</width>
+             <height>511</height>
+            </rect>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>140</y>
+             <width>971</width>
+             <height>80</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <widget class="QToolButton" name="toolButton_pwd_add">
+            <property name="geometry">
+             <rect>
+              <x>690</x>
+              <y>20</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>新增密码</string>
+            </property>
+           </widget>
+           <widget class="QToolButton" name="toolButton_pwd_del">
+            <property name="geometry">
+             <rect>
+              <x>840</x>
+              <y>20</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>删除密码</string>
+            </property>
+           </widget>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>50</y>
+      <width>191</width>
+      <height>781</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>189</width>
+       <height>779</height>
+      </rect>
+     </property>
+     <widget class="QTreeWidget" name="treeWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>1</y>
+        <width>191</width>
+        <height>781</height>
+       </rect>
+      </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
+      <column>
+       <property name="text">
+        <string>功能菜单</string>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>字典管理</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>本地字典</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>单词查询</string>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>密码管理</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>本地密码</string>
+        </property>
+       </item>
+      </item>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="materials/img/img.qrc"/>
+ </resources>
+ <connections/>
+</ui>
