@@ -1,5 +1,7 @@
 <RCC>
-  <qresource prefix="img">
+  <qresource prefix="icon">
+    <file>show_pwd.png</file>
+    <file>hide_pwd.png</file>
     <file>search.jpg</file>
   </qresource>
 </RCC>

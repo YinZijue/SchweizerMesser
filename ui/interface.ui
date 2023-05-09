@@ -216,7 +216,7 @@
            <widget class="QLabel" name="label_9">
             <property name="geometry">
              <rect>
-              <x>560</x>
+              <x>480</x>
               <y>10</y>
               <width>31</width>
               <height>30</height>
@@ -229,7 +229,7 @@
            <widget class="QLineEdit" name="lineEdit_remarks">
             <property name="geometry">
              <rect>
-              <x>440</x>
+              <x>390</x>
               <y>60</y>
               <width>281</width>
               <height>30</height>
@@ -239,7 +239,7 @@
            <widget class="QLabel" name="label_6">
             <property name="geometry">
              <rect>
-              <x>280</x>
+              <x>240</x>
               <y>10</y>
               <width>41</width>
               <height>30</height>
@@ -252,7 +252,7 @@
            <widget class="QLineEdit" name="lineEdit_usr">
             <property name="geometry">
              <rect>
-              <x>330</x>
+              <x>290</x>
               <y>10</y>
               <width>161</width>
               <height>30</height>
@@ -285,7 +285,7 @@
            <widget class="QLabel" name="label_8">
             <property name="geometry">
              <rect>
-              <x>400</x>
+              <x>350</x>
               <y>60</y>
               <width>31</width>
               <height>30</height>
@@ -318,27 +318,43 @@
              <string>标题：</string>
             </property>
            </widget>
-           <widget class="QComboBox" name="comboBox_category">
+           <widget class="QComboBox" name="comboBox_pwd_category">
             <property name="geometry">
              <rect>
-              <x>600</x>
+              <x>520</x>
               <y>10</y>
               <width>181</width>
               <height>30</height>
              </rect>
             </property>
+            <property name="maxVisibleItems">
+             <number>5</number>
+            </property>
            </widget>
            <widget class="QToolButton" name="toolButton_pwd_query">
             <property name="geometry">
              <rect>
-              <x>850</x>
-              <y>20</y>
+              <x>770</x>
+              <y>10</y>
               <width>91</width>
               <height>31</height>
              </rect>
             </property>
             <property name="text">
              <string>查询</string>
+            </property>
+           </widget>
+           <widget class="QToolButton" name="toolButton_pwd_reset_conditons">
+            <property name="geometry">
+             <rect>
+              <x>870</x>
+              <y>10</y>
+              <width>91</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>重置</string>
             </property>
            </widget>
           </widget>
@@ -400,6 +416,172 @@
             </property>
             <property name="text">
              <string>删除密码</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_result_notice">
+            <property name="geometry">
+             <rect>
+              <x>310</x>
+              <y>50</y>
+              <width>171</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="geometry">
+            <rect>
+             <x>-1</x>
+             <y>730</y>
+             <width>971</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <widget class="QPushButton" name="pushButton_home_page">
+            <property name="geometry">
+             <rect>
+              <x>90</x>
+              <y>10</y>
+              <width>75</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>&lt;&lt;首页</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_previous_page">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>10</y>
+              <width>75</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>&lt;上一页</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_current_page">
+            <property name="geometry">
+             <rect>
+              <x>300</x>
+              <y>10</y>
+              <width>71</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_next_page">
+            <property name="geometry">
+             <rect>
+              <x>390</x>
+              <y>10</y>
+              <width>75</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>下一页&gt;</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_final_page">
+            <property name="geometry">
+             <rect>
+              <x>490</x>
+              <y>10</y>
+              <width>75</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>末页&gt;&gt;</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_10">
+            <property name="geometry">
+             <rect>
+              <x>590</x>
+              <y>11</y>
+              <width>21</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>共</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_11">
+            <property name="geometry">
+             <rect>
+              <x>660</x>
+              <y>11</y>
+              <width>71</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>页     跳至</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_total_pages">
+            <property name="geometry">
+             <rect>
+              <x>610</x>
+              <y>11</y>
+              <width>41</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="lineEdit_skip_page">
+            <property name="geometry">
+             <rect>
+              <x>730</x>
+              <y>10</y>
+              <width>71</width>
+              <height>20</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_12">
+            <property name="geometry">
+             <rect>
+              <x>810</x>
+              <y>10</y>
+              <width>21</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>页</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_confirm_skip">
+            <property name="geometry">
+             <rect>
+              <x>850</x>
+              <y>10</y>
+              <width>75</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>确定</string>
             </property>
            </widget>
           </widget>

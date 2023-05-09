@@ -1,3 +1,4 @@
+import logging
 import os.path
 
 from sqlalchemy import create_engine, inspect
@@ -32,5 +33,20 @@ def get_column_info():
             'del_col_count': len(column_list)}
 
 
+def insert_db(db_model):
+    try:
+        with session:
+            session.add(db_model)
+            session.commit()
+            session.refresh(db_model)
+            logging.info("增加记录成功")
+    except Exception as e:
+        logging.error(f"增加记录异常,{e}")
+        session.rollback()
+        session.flush()
+
+
 if __name__ == '__main__':
-    print(get_column_info())
+    from pwd_mgr_models import PwdMgr
+    insert_db(PwdMgr({'title': '标题1', 'url': '地址1', 'usr': '用户1', 'pwd': '密码1', 'category': '分组1', 'remarks': '备注1', 'create_time': '时间11',
+      'last_update_time': '时间12', 'delete_flag': True, 'delete_time': '时间13'}))
