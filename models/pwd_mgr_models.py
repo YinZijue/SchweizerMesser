@@ -49,7 +49,7 @@ class PwdMgr(Base):
                 if conditions.get('usr'):
                     result = result.filter(cls.usr.like(f"%{conditions.get('usr')}%"))
                 if conditions.get('category'):
-                    result = result.filter(cls.category.like(f"%{conditions.get('category')}%"))
+                    result = result.filter(cls.category == conditions.get('category'))
                 if conditions.get('remarks'):
                     result = result.filter(cls.remarks.like(f"%{conditions.get('remarks')}%"))
                 return result.all()

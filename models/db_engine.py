@@ -47,6 +47,4 @@ def insert_db(db_model):
 
 
 if __name__ == '__main__':
-    from pwd_mgr_models import PwdMgr
-    insert_db(PwdMgr({'title': '标题1', 'url': '地址1', 'usr': '用户1', 'pwd': '密码1', 'category': '分组1', 'remarks': '备注1', 'create_time': '时间11',
-      'last_update_time': '时间12', 'delete_flag': True, 'delete_time': '时间13'}))
+   print(get_column_info())

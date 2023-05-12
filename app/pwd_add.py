@@ -2,7 +2,7 @@ import logging
 import sys
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QDialog
+from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QMessageBox
 
 from config import moment
 from models.db_engine import insert_db
@@ -15,11 +15,11 @@ class PwdAdd(QWidget, Ui_Dialog_pwd_add):
         super(PwdAdd, self).__init__(parent)
         self.setupUi(self)
         # 去掉右上的最小化、最大化、关闭按钮
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
         self.p_btn_pwd_pwd_reset.clicked.connect(self.reset_input_pwd)
         self.p_btn_pwd_save_continue.clicked.connect(self.add_pwd_record)
         self.p_btn_pwd_save_exit.clicked.connect(self.add_pwd_record)
-        self.p_btn_pwd_pwd_cancel.clicked.connect(QDialog.accepted)
+        self.p_btn_pwd_pwd_cancel.clicked.connect(self.add_pwd_cancel)
         # 为控件添加事件监听
         self.comboBox_pwd_category_add.installEventFilter(self)
         self.lineEdit_title_add.installEventFilter(self)
@@ -50,17 +50,32 @@ class PwdAdd(QWidget, Ui_Dialog_pwd_add):
                 new_pwd = PwdMgr(conditions)
                 insert_db(new_pwd)
                 if button.objectName() == 'p_btn_pwd_save_exit':
-                    QDialog.close(PwdAdd)
+                    self.close()
         except Exception as e:
             logging.error(str(e))
         finally:
             self.reset_input_pwd()
 
+    def add_pwd_cancel(self):
+        len0 = len(self.lineEdit_title_add.text())
+        len1 = len(self.lineEdit_usr_add.text())
+        len2 = len(self.lineEdit_pwd_add.text())
+        len3 = len(self.lineEdit_url_add.text())
+        len4 = len(self.plainTextEdit_remark_add.toPlainText())
+        len5 = len(self.comboBox_pwd_category_add.currentText())
+        if (len0 + len1 + len2 + len3 + len4 + len5) == 0:
+            self.close()
+        else:
+            result = QMessageBox.warning(self, "信息未保存", "当前输入内容尚未保存,您确定要退出吗？", QMessageBox.Yes | QMessageBox.No)
+            if result == QMessageBox.Yes:
+                self.close()
+
     def eventFilter(self, a0: 'QObject', a1: 'QEvent') -> bool:
         # 鼠标按下comboBox时从数据库获取分组
         if a0 == self.comboBox_pwd_category_add and a1.type() == QtCore.QEvent.MouseButtonPress:
-            category_list = [category.to_dict()['category'] for category in PwdMgr.get_pwd({'category': ''})]
-            self.comboBox_pwd_category_add.addItems(category_list)
+            category_set = {category.to_dict()['category'] for category in PwdMgr.get_pwd({'category': ''}) if
+                            len(category.to_dict()['category']) > 0}
+            self.comboBox_pwd_category_add.addItems(category_set)
         # title输入框获得输入焦点后，清空异常提示
         elif a0 == self.lineEdit_title_add and a1.type() == QtCore.QEvent.FocusIn:
             self.label_pwd_add_notice.setText('')
