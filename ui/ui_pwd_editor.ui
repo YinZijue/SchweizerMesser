@@ -44,7 +44,7 @@
    <property name="title">
     <string/>
    </property>
-   <widget class="QPushButton" name="p_btn_pwd_pwd_reset">
+   <widget class="QPushButton" name="p_btn_pwd_reset">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -57,7 +57,7 @@
      <string>重置</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="p_btn_pwd_pwd_cancel">
+   <widget class="QPushButton" name="p_btn_pwd_cancel">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -145,7 +145,7 @@
      <string>密码：</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_pwd_add_notice">
+   <widget class="QLabel" name="label_notice">
     <property name="geometry">
      <rect>
       <x>70</x>
