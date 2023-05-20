@@ -58,8 +58,11 @@
            <height>781</height>
           </rect>
          </property>
+         <property name="accessibleName">
+          <string/>
+         </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="page_home">
           <property name="accessibleName">
@@ -595,6 +598,24 @@
            </widget>
           </widget>
          </widget>
+         <widget class="QWidget" name="page_sys_param">
+          <property name="accessibleName">
+           <string>数据字典</string>
+          </property>
+          <widget class="QLabel" name="label_13">
+           <property name="geometry">
+            <rect>
+             <x>270</x>
+             <y>30</y>
+             <width>321</width>
+             <height>91</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>数据字典</string>
+           </property>
+          </widget>
+         </widget>
         </widget>
        </widget>
       </widget>
@@ -641,11 +662,11 @@
       </column>
       <item>
        <property name="text">
-        <string>字典管理</string>
+        <string>词典管理</string>
        </property>
        <item>
         <property name="text">
-         <string>本地字典</string>
+         <string>本地词典</string>
         </property>
        </item>
        <item>
@@ -663,6 +684,11 @@
          <string>本地密码</string>
         </property>
        </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>数据字典</string>
+       </property>
       </item>
      </widget>
     </widget>

@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QApplication
 
-from app.pwd_editor_event import reset_input_pwd, add_pwd_record, add_pwd_cancel
+from app.pwd_editor_event import reset_input_pwd, edit_pwd_record, add_pwd_cancel
 from models.pwd_mgr_models import PwdMgr
 from ui.ui_pwd_editor import Ui_Dialog_pwd_add
 
@@ -17,8 +17,8 @@ class PwdEditor(QWidget, Ui_Dialog_pwd_add):
         self.setFixedSize(self.width(), self.height())
         self.setWindowFlags(Qt.CustomizeWindowHint)
         self.p_btn_pwd_reset.clicked.connect(self.reset_input_pwd)
-        self.p_btn_pwd_save_continue.clicked.connect(self.add_pwd_record)
-        self.p_btn_pwd_save_exit.clicked.connect(self.add_pwd_record)
+        self.p_btn_pwd_save_continue.clicked.connect(self.edit_pwd_record)
+        self.p_btn_pwd_save_exit.clicked.connect(self.edit_pwd_record)
         self.p_btn_pwd_cancel.clicked.connect(self.add_pwd_cancel)
         # 为控件添加事件监听
         self.comboBox_pwd_category_add.installEventFilter(self)
@@ -27,8 +27,8 @@ class PwdEditor(QWidget, Ui_Dialog_pwd_add):
     def reset_input_pwd(self):
         reset_input_pwd(self)
 
-    def add_pwd_record(self):
-        add_pwd_record(self)
+    def edit_pwd_record(self, original_pwd):
+        edit_pwd_record(self, original_pwd)
 
     def add_pwd_cancel(self):
         add_pwd_cancel(self)

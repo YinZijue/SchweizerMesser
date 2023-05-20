@@ -1,9 +1,51 @@
 import logging
 
-from PyQt5.QtWidgets import QMessageBox, QPushButton
+from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget
 
-from config import moment
+from config import get_moment
 from models.pwd_mgr_models import PwdMgr
+from utils.get_widget_value import get_widget_name_value_batch
+
+
+def edit_pwd_record(my_window, original_pwd: dict):
+    """
+    密码编辑界面:新增密码记录
+    :param original_pwd:
+    :param my_window:
+    :return:
+    """
+    # 通过按钮容器获取sender，以便不同的按钮使用用一个槽函数
+    button = QPushButton().sender()
+    exist_title = [title.to_dict()['title'] for title in PwdMgr.get_pwd({'title': ''})]
+    try:
+        if my_window.label.text() == '新增密码':
+            if len(my_window.lineEdit_title_add.text()) == 0:
+                my_window.label_notice.setText('标题不能为空！')
+            elif my_window.lineEdit_title_add.text() in exist_title:
+                my_window.label_notice.setText('标题已存在,请检查！')
+            else:
+                conditions = {
+                    'title': my_window.lineEdit_title_add.text(),
+                    'url': my_window.lineEdit_url_add.text(),
+                    'usr': my_window.lineEdit_usr_add.text(),
+                    'password': my_window.lineEdit_password_add.text(),
+                    'category': my_window.comboBox_pwd_category_add.currentText(),
+                    'remark': my_window.plainTextEdit_remark_add.toPlainText(),
+                    'create_time': get_moment(),
+                    'last_update_time': get_moment(),
+                    'delete_flag': 0
+                }
+                PwdMgr.insert_pwd(conditions)
+                my_window.reset_input_pwd()
+                if button.objectName() == 'p_btn_pwd_save_exit':
+                    my_window.close()
+        elif my_window.label.text() == '修改密码':
+            widgets = my_window.findChildren(QWidget)
+            PwdMgr.update_pwd(original_pwd, get_widget_name_value_batch(widgets))
+            my_window.close()
+
+    except Exception as e:
+        logging.error(str(e))
 
 
 def reset_input_pwd(my_window):
@@ -14,44 +56,10 @@ def reset_input_pwd(my_window):
     """
     my_window.lineEdit_title_add.setText('')
     my_window.lineEdit_usr_add.setText('')
-    my_window.lineEdit_pwd_add.setText('')
+    my_window.lineEdit_password_add.setText('')
     my_window.lineEdit_url_add.setText('')
     my_window.plainTextEdit_remark_add.setPlainText('')
     my_window.comboBox_pwd_category_add.clear()
-
-
-def add_pwd_record(my_window):
-    """
-    密码编辑界面:新增密码记录
-    :param my_window:
-    :return:
-    """
-    # 通过按钮容器获取sender，以便不同的按钮使用用一个槽函数
-    button = QPushButton().sender()
-    exist_title = [title.to_dict()['title'] for title in PwdMgr.get_pwd({'title': ''})]
-    try:
-        if len(my_window.lineEdit_title_add.text()) == 0:
-            my_window.label_notice.setText('标题不能为空！')
-        elif my_window.lineEdit_title_add.text() in exist_title:
-            my_window.label_notice.setText('标题已存在,请检查！')
-        else:
-            conditions = {
-                'title': my_window.lineEdit_title_add.text(),
-                'url': my_window.lineEdit_url_add.text(),
-                'usr': my_window.lineEdit_usr_add.text(),
-                'pwd': my_window.lineEdit_pwd_add.text(),
-                'category': my_window.comboBox_pwd_category_add.currentText(),
-                'remarks': my_window.plainTextEdit_remark_add.toPlainText(),
-                'create_time': moment,
-                'last_update_time': moment,
-                'delete_flag': 0
-            }
-            PwdMgr.insert_pwd(conditions)
-            my_window.reset_input_pwd()
-            if button.objectName() == 'p_btn_pwd_save_exit':
-                my_window.close()
-    except Exception as e:
-        logging.error(str(e))
 
 
 def add_pwd_cancel(my_window):
@@ -62,7 +70,7 @@ def add_pwd_cancel(my_window):
     """
     len0 = len(my_window.lineEdit_title_add.text())
     len1 = len(my_window.lineEdit_usr_add.text())
-    len2 = len(my_window.lineEdit_pwd_add.text())
+    len2 = len(my_window.lineEdit_password_add.text())
     len3 = len(my_window.lineEdit_url_add.text())
     len4 = len(my_window.plainTextEdit_remark_add.toPlainText())
     len5 = len(my_window.comboBox_pwd_category_add.currentText())

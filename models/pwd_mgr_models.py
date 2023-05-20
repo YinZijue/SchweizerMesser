@@ -2,32 +2,33 @@ import logging
 
 from sqlalchemy import Column, String, Boolean
 
+from config import get_rowtime_stamp, get_moment
 from models.db_engine import Base, session
 
 
 class PwdMgr(Base):
     __tablename__ = 'PwdMgr'
     # 字段忽略大小写，方便模糊查询
-    pwd_id = Column(String(32), primary_key=True)
+    pwd_id = Column(String(16), primary_key=True)
     title = Column(String(32, collation='NOCASE'), nullable=False)
     url = Column(String(64, collation='NOCASE'))
     usr = Column(String(32, collation='NOCASE'))
-    pwd = Column(String(256, collation='NOCASE'))
+    password = Column(String(256, collation='NOCASE'))
     category = Column(String(16, collation='NOCASE'))
-    remarks = Column(String(512, collation='NOCASE'))
+    remark = Column(String(512, collation='NOCASE'))
     create_time = Column(String(32))
     last_update_time = Column(String(32))
     delete_flag = Column(Boolean)
     delete_time = Column(String(32))
 
     def __init__(self, field_dict: dict):
-
+        self.pwd_id = get_rowtime_stamp()
         self.title = field_dict.get('title')
         self.url = field_dict.get('url')
         self.usr = field_dict.get('usr')
-        self.pwd = field_dict.get('pwd')
+        self.password = field_dict.get('password')
         self.category = field_dict.get('category')
-        self.remarks = field_dict.get('remarks')
+        self.remark = field_dict.get('remark')
         self.create_time = field_dict.get('create_time')
         self.last_update_time = field_dict.get('last_update_time')
         self.delete_flag = field_dict.get('delete_flag')
@@ -38,9 +39,9 @@ class PwdMgr(Base):
         将返回的对象格式化为字符串
         :return:
         """
-        return f"<PwdMgr(title='{self.title}', url='{self.url}', " \
-               f"usr='{self.usr}',pwd='{self.pwd}', category='{self.category}'," \
-               f" remarks='{self.remarks}', create_time='{self.create_time}'," \
+        return f"<PwdMgr(pwd_id='{self.pwd_id}',title='{self.title}', url='{self.url}', " \
+               f"usr='{self.usr}',pwd='{self.password}', category='{self.category}'," \
+               f" remark='{self.remark}', create_time='{self.create_time}'," \
                f" last_update_time='{self.last_update_time}')>"
 
     def to_dict(self):
@@ -56,6 +57,8 @@ class PwdMgr(Base):
         try:
             with session:
                 result = session.query(cls).filter(cls.delete_flag == '0')
+                if conditions.get('pwd_id'):
+                    result = result.filter(cls.pwd_id == conditions.get('pwd_id'))
                 if conditions.get('title'):
                     result = result.filter(cls.title.like(f"%{conditions.get('title')}%"))
                 if conditions.get('url'):
@@ -64,9 +67,29 @@ class PwdMgr(Base):
                     result = result.filter(cls.usr.like(f"%{conditions.get('usr')}%"))
                 if conditions.get('category'):
                     result = result.filter(cls.category == conditions.get('category'))
-                if conditions.get('remarks'):
-                    result = result.filter(cls.remarks.like(f"%{conditions.get('remarks')}%"))
+                if conditions.get('remark'):
+                    result = result.filter(cls.remarks.like(f"%{conditions.get('remark')}%"))
                 print(f"已查询到{len(result.all())}条记录")
+                return result.all()
+        except Exception as e:
+            logging.error(str(e))
+
+    @classmethod
+    def get_pwd_single(cls, condition: str):
+        try:
+            with session:
+                if condition == 'pwd_id':
+                    result = session.query(cls.pwd_id).filter(cls.pwd_id == condition)
+                if condition == 'title':
+                    result = session.query(cls.title).filter(cls.title == condition)
+                if condition == 'url':
+                    result = session.query(cls.url).filter(cls.url == condition)
+                if condition == 'usr':
+                    result = session.query(cls.usr).filter(cls.usr == condition)
+                if condition == 'category':
+                    result = session.query(cls.category).filter(cls.category == condition)
+                if condition == 'remarks':
+                    result = session.query(cls.remarks).filter(cls.remarks == condition)
                 return result.all()
         except Exception as e:
             logging.error(str(e))
@@ -75,17 +98,42 @@ class PwdMgr(Base):
     def insert_pwd(cls, conditions: dict):
         try:
             with session:
-                if not conditions.get('title'):
+                if not conditions.get('title') or len(conditions.get('title')) == 0:
                     logging.error("标题不能为空！")
                 else:
-                    session.add(cls(field_dict=conditions))
-                    session.commit()
+                    try:
+                        if conditions.get('title') in session.query(cls.title).filter(
+                                cls.title == conditions.get('title')).one():
+                            logging.error('标题不允许重复,添加失败,请检查！')
+                    except Exception:
+                        logging.info("当前标题无历史记录,判定有效.")
+                        session.add(cls(field_dict=conditions))
+                        session.commit()
+
         except Exception as e:
             logging.error(str(e))
 
     @classmethod
-    def update_pwd(cls, conditions: dict):
-        pass
+    def update_pwd(cls, original_record: dict, new_record: dict):
+        try:
+            with session:
+                exist_title = [title.to_dict()['title'] for title in cls.get_pwd({'title': ''})]
+        except Exception as e:
+            logging.info(str(e))
+        if not new_record.get('title') or len(new_record.get('title')) == 0:
+            logging.error('将要保存的标题为空,更新密码记录失败,请检查！')
+        elif original_record.get('title') != new_record.get('title') and new_record.get('title') in exist_title:
+            logging.error("将要保存的密码已存在,更新失败,请检查!")
+        else:
+            try:
+                with session:
+                    original_pwd = session.query(cls).filter(cls.title == original_record.get('title'))
+                    original_pwd.update(new_record)
+                    new_pwd = session.query(cls).filter(cls.title == new_record.get('title'))
+                    new_pwd.update({'last_update_time': get_moment()})
+                    session.commit()
+            except Exception as e:
+                logging.error(str(e))
 
     @classmethod
     def get_row_count(cls):
@@ -104,8 +152,37 @@ class PwdMgr(Base):
 
 
 if __name__ == '__main__':
-    # print([r.to_dict() for r in PwdMgr.get_pwd({})])
-    PwdMgr.insert_pwd(
-        {'pwd_id': '', 'title': '标题2333', 'url': '地址1', 'usr': '用户1', 'pwd': '密码1', 'category': '分组1', 'remarks': '备注1',
-         'create_time': '时间11',
-         'last_update_time': '时间12', 'delete_flag': True, 'delete_time': '时间13'})
+    print([title for temp in session.query(PwdMgr.title).all() for title in temp])
+
+    PwdMgr.insert_pwd(conditions={
+        'title': '腾讯视频',
+        'url': 'https://www.baidu.com',
+        'usr': 'JackLondon',
+        'password': 'sdfasfasfawegaergw3423',
+        'category': "分组2",
+        'remarks': "这是备注",
+        'create_time': get_moment(),
+        'last_update_time': get_moment(),
+        'delete_flag': 0
+    })
+    PwdMgr.update_pwd(
+        original_record={
+            'title': 'tom',
+            'url': 'sssss',
+            'usr': '1111',
+            'password': 'fasfasdfasdf',
+            'category': "222",
+            'remarks': "111",
+            'delete_flag': 0
+        },
+        new_record=
+        {
+            'title': 'tom',
+            'url': '23234234',
+            'usr': '1111',
+            'password': 'fasfasdfasdf',
+            'category': "222",
+            'remarks': "111",
+            'delete_flag': 0
+        }
+    )

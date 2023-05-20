@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView
 
-from app.page_switch import page_switched, open_pwd_add_ui
+from app.page_switch import page_switched
 from app.pwd_editor import PwdEditor
 from app.pwd_mgr_events import reset_conditions_pwd, query_pwd, context_menu
 from models.pwd_mgr_models import PwdMgr
@@ -52,7 +52,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def open_pwd_add_ui(self):
         self.pwd_add.setWindowModality(Qt.ApplicationModal)
+        self.pwd_add.label_notice.clear()
+        self.pwd_add.label.setText('新增密码')
+        self.pwd_add.p_btn_pwd_save_continue.show()
         self.pwd_add.show()
+        self.pwd_add.reset_input_pwd()
 
     def eventFilter(self, a0: 'QObject', a1: 'QEvent') -> bool:
         # 鼠标点击comboBox时从数据库获取分组

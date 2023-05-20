@@ -12,8 +12,8 @@ session = Session()
 Base = declarative_base()
 insp = inspect(engine)
 
-column_map = {'pwd_id': '密码ID', 'title': "标题", 'url': "服务地址", 'usr': "用户名", 'pwd': "密码", 'category': "分组",
-              'remarks': "备注",
+column_map = {'pwd_id': '密码ID', 'title': "标题", 'url': "服务地址", 'usr': "用户名", 'password': "密码", 'category': "分组",
+              'remark': "备注",
               'create_time': "创建时间", 'last_update_time': "更新时间", 'delete_flag': "删除标识", 'delete_time': "删除时间"}
 
 
@@ -26,11 +26,10 @@ def column_mapping(col_name: str, col_dict: dict):
             return k
 
 
-def get_column_info():
+def get_column_info(table_name):
     # 分别获取当前数据库、表名以及表中所有列的信息
     current_db = insp.get_schema_names()[0]
-    current_table = insp.get_table_names(schema=current_db)[0]
-    columns = insp.get_columns(table_name=current_table, schema=current_db)
+    columns = insp.get_columns(table_name=table_name, schema=current_db)
     return [column_mapping(column["name"], column_map) for column in columns]
 
 
@@ -48,4 +47,5 @@ def insert_db(db_model):
 
 
 if __name__ == '__main__':
-    print(get_column_info())
+    print(get_column_info('PwdMgr'))
+

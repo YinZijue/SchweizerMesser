@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QMenu, QWidget, QMessageBox
+from PyQt5.QtWidgets import QMenu, QMessageBox, QWidget
 
 from models.db_engine import column_map, column_mapping
 from models.pwd_mgr_models import PwdMgr
@@ -35,6 +35,9 @@ def query_pwd(my_window):
         'category': my_window.comboBox_pwd_category.currentText()
     }
     pwd_records = [[v for k, v in p.to_dict().items()] for p in PwdMgr(conditions).get_pwd(conditions=conditions)]
+    # 密码ID无需在界面上显示
+    for pwd in pwd_records:
+        pwd.remove(pwd[0])
     model = my_window.tableView_pwd.model()
     # 查询结果小于固定行数时，用空数据填充表格
     while len(pwd_records) < model.rowCount():
@@ -70,12 +73,15 @@ def context_menu(my_window):
     else:
         action = my_window.menu.exec()
         if action == update_action:
-            update_pwd(my_window, selected_row_data)
+            widgets = my_window.pwd_add.findChildren(QWidget)
+            update_pwd(my_window)
+            get_widget_value_batch(widgets, selected_row_data)
 
 
-def update_pwd(my_window, original_pwd: dict):
+def update_pwd(my_window):
     my_window.pwd_add.setWindowModality(Qt.ApplicationModal)
     my_window.pwd_add.show()
     my_window.pwd_add.label.setText("修改密码")
-    widgets = my_window.pwd_add.findChildren(QWidget)
-    get_widget_value_batch(widgets, original_pwd)
+    my_window.pwd_add.label_notice.clear()
+    my_window.pwd_add.p_btn_pwd_save_continue.hide()
+
