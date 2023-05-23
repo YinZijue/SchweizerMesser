@@ -369,6 +369,18 @@
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_title_add</tabstop>
+  <tabstop>lineEdit_usr_add</tabstop>
+  <tabstop>lineEdit_password_add</tabstop>
+  <tabstop>lineEdit_url_add</tabstop>
+  <tabstop>plainTextEdit_remark_add</tabstop>
+  <tabstop>comboBox_pwd_category_add</tabstop>
+  <tabstop>p_btn_pwd_reset</tabstop>
+  <tabstop>p_btn_pwd_cancel</tabstop>
+  <tabstop>p_btn_pwd_save_continue</tabstop>
+  <tabstop>p_btn_pwd_save_exit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

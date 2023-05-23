@@ -68,28 +68,8 @@ class PwdMgr(Base):
                 if conditions.get('category'):
                     result = result.filter(cls.category == conditions.get('category'))
                 if conditions.get('remark'):
-                    result = result.filter(cls.remarks.like(f"%{conditions.get('remark')}%"))
+                    result = result.filter(cls.remark.like(f"%{conditions.get('remark')}%"))
                 print(f"已查询到{len(result.all())}条记录")
-                return result.all()
-        except Exception as e:
-            logging.error(str(e))
-
-    @classmethod
-    def get_pwd_single(cls, condition: str):
-        try:
-            with session:
-                if condition == 'pwd_id':
-                    result = session.query(cls.pwd_id).filter(cls.pwd_id == condition)
-                if condition == 'title':
-                    result = session.query(cls.title).filter(cls.title == condition)
-                if condition == 'url':
-                    result = session.query(cls.url).filter(cls.url == condition)
-                if condition == 'usr':
-                    result = session.query(cls.usr).filter(cls.usr == condition)
-                if condition == 'category':
-                    result = session.query(cls.category).filter(cls.category == condition)
-                if condition == 'remarks':
-                    result = session.query(cls.remarks).filter(cls.remarks == condition)
                 return result.all()
         except Exception as e:
             logging.error(str(e))
@@ -125,6 +105,7 @@ class PwdMgr(Base):
         elif original_record.get('title') != new_record.get('title') and new_record.get('title') in exist_title:
             logging.error("将要保存的密码已存在,更新失败,请检查!")
         else:
+            print("original_record为", original_record)
             try:
                 with session:
                     original_pwd = session.query(cls).filter(cls.title == original_record.get('title'))
@@ -134,6 +115,19 @@ class PwdMgr(Base):
                     session.commit()
             except Exception as e:
                 logging.error(str(e))
+
+    @classmethod
+    def delete_pwd_logical(cls, original_record: list):
+        title_list = [record['title'] for record in original_record]
+        try:
+            with session:
+                pwd_id_list = [pwd_id for record in session.query(cls.pwd_id).filter(cls.title.in_(title_list)).all()
+                               for pwd_id in record]
+                session.query(cls).filter(cls.pwd_id.in_(pwd_id_list)).update(
+                    {'delete_flag': 1, 'delete_time': get_moment()})
+                session.commit()
+        except Exception as e:
+            logging.error(str(e))
 
     @classmethod
     def get_row_count(cls):
@@ -146,43 +140,47 @@ class PwdMgr(Base):
 
     @classmethod
     def get_category(cls):
-        category_set = {category.to_dict()['category'] for category in cls.get_pwd({'category': ''}) if
-                        len(category.to_dict()['category']) > 0}
+        with session:
+            category_set = {
+                category for categories in session.query(cls.category).all() for category in categories if
+                len(category) > 0
+            }
+            # 利用字典键去重
         return category_set
 
 
 if __name__ == '__main__':
-    print([title for temp in session.query(PwdMgr.title).all() for title in temp])
-
-    PwdMgr.insert_pwd(conditions={
-        'title': '腾讯视频',
-        'url': 'https://www.baidu.com',
-        'usr': 'JackLondon',
-        'password': 'sdfasfasfawegaergw3423',
-        'category': "分组2",
-        'remarks': "这是备注",
-        'create_time': get_moment(),
-        'last_update_time': get_moment(),
-        'delete_flag': 0
-    })
-    PwdMgr.update_pwd(
-        original_record={
-            'title': 'tom',
-            'url': 'sssss',
-            'usr': '1111',
-            'password': 'fasfasdfasdf',
-            'category': "222",
-            'remarks': "111",
-            'delete_flag': 0
-        },
-        new_record=
-        {
-            'title': 'tom',
-            'url': '23234234',
-            'usr': '1111',
-            'password': 'fasfasdfasdf',
-            'category': "222",
-            'remarks': "111",
-            'delete_flag': 0
-        }
-    )
+    PwdMgr.delete_pwd_logical([{'title': '网易UU'}, {'title': '腾讯视频'}])
+    # print([title for temp in session.query(PwdMgr.title).all() for title in temp])
+    # PwdMgr.insert_pwd(conditions={
+    #     'title': '腾讯视频',
+    #     'url': 'https://www.baidu.com',
+    #     'usr': 'JackLondon',
+    #     'password': 'sdfasfasfawegaergw3423',
+    #     'category': "分组2",
+    #     'remark': "这是备注",
+    #     'create_time': get_moment(),
+    #     'last_update_time': get_moment(),
+    #     'delete_flag': 0
+    # })
+    # PwdMgr.update_pwd(
+    #     original_record={
+    #         'title': 'tom',
+    #         'url': 'sssss',
+    #         'usr': '1111',
+    #         'password': 'fasfasdfasdf',
+    #         'category': "222",
+    #         'remark': "111",
+    #         'delete_flag': 0
+    #     },
+    #     new_record=
+    #     {
+    #         'title': 'tom',
+    #         'url': '23234234',
+    #         'usr': '1111',
+    #         'password': 'fasfasdfasdf',
+    #         'category': "222",
+    #         'remark': "111",
+    #         'delete_flag': 0
+    #     }
+    # )

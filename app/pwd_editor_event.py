@@ -3,6 +3,7 @@ import logging
 from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget
 
 from config import get_moment
+from models.db_engine import column_map
 from models.pwd_mgr_models import PwdMgr
 from utils.get_widget_value import get_widget_name_value_batch
 
@@ -41,8 +42,15 @@ def edit_pwd_record(my_window, original_pwd: dict):
                     my_window.close()
         elif my_window.label.text() == '修改密码':
             widgets = my_window.findChildren(QWidget)
-            PwdMgr.update_pwd(original_pwd, get_widget_name_value_batch(widgets))
-            my_window.close()
+            widget_dict = get_widget_name_value_batch(widgets)
+            new_pwd_record = {k1: v for k1 in column_map.keys() for k2, v in widget_dict.items() if k1 in k2}
+            if len(my_window.lineEdit_title_add.text()) == 0:
+                my_window.label_notice.setText('标题不能为空！')
+            elif original_pwd['title'] != new_pwd_record['title'] and new_pwd_record['title'] in exist_title:
+                my_window.label_notice.setText('该标题已存在,请更换为其他标题！')
+            else:
+                PwdMgr.update_pwd(original_pwd, new_pwd_record)
+                my_window.close()
 
     except Exception as e:
         logging.error(str(e))

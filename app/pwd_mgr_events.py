@@ -2,9 +2,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QMenu, QMessageBox, QWidget
 
-from models.db_engine import column_map, column_mapping
 from models.pwd_mgr_models import PwdMgr
-from utils.get_widget_value import get_widget_value_batch
+from utils.custom_widget import fill_combo_box, generate_message_box
+from utils.get_widget_value import get_widget_value_batch, get_current_row
 
 
 def reset_conditions_pwd(my_window):
@@ -17,7 +17,7 @@ def reset_conditions_pwd(my_window):
     my_window.lineEdit_usr.clear()
     my_window.comboBox_pwd_category.clear()
     my_window.lineEdit_url.clear()
-    my_window.lineEdit_remarks.clear()
+    my_window.lineEdit_remark.clear()
     query_pwd(my_window)
 
 
@@ -31,7 +31,7 @@ def query_pwd(my_window):
         'title': my_window.lineEdit_title.text(),
         'usr': my_window.lineEdit_usr.text(),
         'url': my_window.lineEdit_url.text(),
-        'remarks': my_window.lineEdit_remarks.text(),
+        'remark': my_window.lineEdit_remark.text(),
         'category': my_window.comboBox_pwd_category.currentText()
     }
     pwd_records = [[v for k, v in p.to_dict().items()] for p in PwdMgr(conditions).get_pwd(conditions=conditions)]
@@ -50,19 +50,13 @@ def query_pwd(my_window):
 def context_menu(my_window):
     my_window.menu = QMenu()
     update_action = my_window.menu.addAction("修改")
+    delete_action = my_window.menu.addAction("删除")
     my_window.menu.popup(QCursor.pos())
+    selected_row_data = get_current_row(my_window.tableView_pwd)
+    my_window.signal_to_pwd_editor.emit(selected_row_data)
     my_window.menu.show()
     # 右键选中一行时,获取该行数据及对应的列名
-    model = my_window.tableView_pwd.model()
-    selected_row_index = my_window.tableView_pwd.currentIndex().row()
-    selected_row_data = {}
-    for column in range(model.columnCount()):
-        column_name = column_mapping(model.headerData(column, Qt.Horizontal), column_map)
-        index = model.index(selected_row_index, column)
-        item_value = str(model.data(index))
-        if 'PyQt5.QtCore.QVariant' in item_value:
-            item_value = ''
-        selected_row_data[column_name] = item_value
+
     if selected_row_data['title'] == '':
         message_box = QMessageBox()
         message_box.setWindowTitle("提示")
@@ -73,9 +67,12 @@ def context_menu(my_window):
     else:
         action = my_window.menu.exec()
         if action == update_action:
+            fill_combo_box(PwdMgr.get_category(), my_window.pwd_add.comboBox_pwd_category_add)
             widgets = my_window.pwd_add.findChildren(QWidget)
             update_pwd(my_window)
             get_widget_value_batch(widgets, selected_row_data)
+        if action == delete_action:
+            delete_pwd_single(my_window, [selected_row_data])
 
 
 def update_pwd(my_window):
@@ -85,3 +82,13 @@ def update_pwd(my_window):
     my_window.pwd_add.label_notice.clear()
     my_window.pwd_add.p_btn_pwd_save_continue.hide()
 
+
+def delete_pwd_single(my_window, select_pwd_id):
+    message_box, q_yes, q_no = generate_message_box(
+        my_window, QMessageBox.Warning, "注意", "您确定要删除选中的密码记录吗?"
+    )
+    if message_box.clickedButton() == q_yes:
+        PwdMgr.delete_pwd_logical(select_pwd_id)
+        query_pwd(my_window)
+    elif message_box.clickedButton() == q_no:
+        message_box.close()

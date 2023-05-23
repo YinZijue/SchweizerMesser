@@ -6,7 +6,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 # 使用相对路径连接数据库，似乎是针对当前文件所在目录
 root = os.path.dirname(os.getcwd())
-engine = create_engine(f'sqlite:///{root}/db/db.db3', echo=True, connect_args={'check_same_thread': False})
+engine = create_engine(f'sqlite:///{root}/db/db.db3', echo=False, connect_args={'check_same_thread': False})
 Session = sessionmaker(engine, autocommit=False, autoflush=False)
 session = Session()
 Base = declarative_base()
@@ -19,6 +19,11 @@ column_map = {'pwd_id': '密码ID', 'title': "标题", 'url': "服务地址", 'u
 
 # 表名映射
 def column_mapping(col_name: str, col_dict: dict):
+    """
+    :param col_name:
+    :param col_dict:
+    :return:
+    """
     for k, v in col_dict.items():
         if col_name == k:
             return v
@@ -30,7 +35,9 @@ def get_column_info(table_name):
     # 分别获取当前数据库、表名以及表中所有列的信息
     current_db = insp.get_schema_names()[0]
     columns = insp.get_columns(table_name=table_name, schema=current_db)
-    return [column_mapping(column["name"], column_map) for column in columns]
+    CN_col_name = [column_mapping(column["name"], column_map) for column in columns]
+    En_col_name = [column["name"] for column in columns]
+    return {'cn_col_name': CN_col_name, 'en_col_name': En_col_name}
 
 
 def insert_db(db_model):
@@ -47,5 +54,6 @@ def insert_db(db_model):
 
 
 if __name__ == '__main__':
-    print(get_column_info('PwdMgr'))
-
+    # print(get_column_info('PwdMgr'))
+    for k in column_map.keys():
+        print(k)

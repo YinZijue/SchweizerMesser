@@ -6,7 +6,7 @@ from models.db_engine import get_column_info
 class UserTableModel(QAbstractTableModel):
     def __init__(self, data=None, parent=None):
         super().__init__(parent)
-        self._headers = get_column_info('PwdMgr')[1:9]
+        self._headers = get_column_info('PwdMgr')['cn_col_name'][1:9]
         self._data = data or []
 
     def rowCount(self, parent=QModelIndex()):

@@ -62,7 +62,7 @@
           <string/>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="page_home">
           <property name="accessibleName">
@@ -229,7 +229,7 @@
              <string>分组：</string>
             </property>
            </widget>
-           <widget class="QLineEdit" name="lineEdit_remarks">
+           <widget class="QLineEdit" name="lineEdit_remark">
             <property name="geometry">
              <rect>
               <x>390</x>

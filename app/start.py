@@ -1,25 +1,31 @@
 import sys
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView
 
 from app.page_switch import page_switched
 from app.pwd_editor import PwdEditor
 from app.pwd_mgr_events import reset_conditions_pwd, query_pwd, context_menu
+from controllers.event_filter import MyEventFilter
+from controllers.event_listener import MyListener
 from models.pwd_mgr_models import PwdMgr
 from models.table_model import UserTableModel
 from ui.ui_interface import Ui_MainWindow
+from utils.custom_widget import fill_combo_box
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+    signal_to_pwd_editor = pyqtSignal(dict)
 
     def __init__(self, parent=None):
+        self.my_listener = MyListener()
+        self.my_filter = MyEventFilter(self)
+        self.pwd_add = PwdEditor()
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.width(), self.height())
         # 实例化添加密码弹窗界面的功能类
-        self.pwd_add = PwdEditor()
+        self.signal_to_pwd_editor.connect(self.pwd_add.receive_data_from_pwd_mgr)
         self.treeWidget.clicked.connect(self.page_switched)
         self.tableView_pwd.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.tableView_pwd.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -34,8 +40,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.toolButton_pwd_reset_conditons.clicked.connect(self.reset_conditions_pwd)
         self.tableView_pwd.setContextMenuPolicy(Qt.CustomContextMenu)
         self.tableView_pwd.customContextMenuRequested.connect(self.context_menu)
+        fill_combo_box(PwdMgr.get_category(), self.comboBox_pwd_category)
+        self.comboBox_pwd_category.clear()
         # 监听鼠标点击事件，若该控件被点击，则用list填充combobox
-        self.comboBox_pwd_category.installEventFilter(self)
+        self.pwd_add.closeEvent = self.my_listener
+        self.pwd_add.installEventFilter(self.my_filter)
+        self.comboBox_pwd_category.mousePressEvent = self.my_listener
+        self.comboBox_pwd_category.installEventFilter(self.my_filter)
 
     # 菜单页切换
     def page_switched(self):
@@ -57,20 +68,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pwd_add.p_btn_pwd_save_continue.show()
         self.pwd_add.show()
         self.pwd_add.reset_input_pwd()
-
-    def eventFilter(self, a0: 'QObject', a1: 'QEvent') -> bool:
-        # 鼠标点击comboBox时从数据库获取分组
-        if a0 == self.comboBox_pwd_category and a1.type() == QtCore.QEvent.MouseButtonPress:
-            category_set = PwdMgr.get_category()
-            if self.comboBox_pwd_category.count() == 0:
-                self.comboBox_pwd_category.addItems(category_set)
-            else:
-                # 后续添加时去重
-                for category in category_set:
-                    if category not in [self.comboBox_pwd_category.itemText(idx) for idx in
-                                        range(0, self.comboBox_pwd_category.count())]:
-                        self.comboBox_pwd_category.addItem(category)
-        return False
 
 
 if __name__ == '__main__':
